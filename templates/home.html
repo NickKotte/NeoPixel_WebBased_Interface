@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block headerstuff %}
+<script type=text/javascript>
+		$(function() {
+		  $('a#process_input_r').bind('click', function() {
+			$.getJSON('/background_process', {
+			  color: $('input[name=red]').val(),
+			}, function(data) {
+			  $("#result").text(data.result);
+			});
+			return false;
+		  });
+		});
+</script>
+<script type=text/javascript>
+		$(function() {
+		  $('a#process_input_b').bind('click', function() {
+			$.getJSON('/background_process', {
+			  color: $('input[name=blue]').val(),
+			}, function(data) {
+			  $("#result").text(data.result);
+			});
+			return false;
+		  });
+		});
+</script>
+<script type=text/javascript>
+		$(function() {
+		  $('a#process_input_g').bind('click', function() {
+			$.getJSON('/background_process', {
+			  color: $('input[name=green]').val(),
+			}, function(data) {
+			  $("#result").text(data.result);
+			});
+			return false;
+		  });
+		});
+</script>
+<script type=text/javascript>
+		$(function() {
+		  $('a#process_input_clear').bind('click', function() {
+			$.getJSON('/background_process', {
+			  color: $('input[name=clear]').val(),
+			}, function(data) {
+			  $("#result").text(data.result);
+			});
+			return false;
+		  });
+		});
+</script>
+{% endblock headerstuff %}
+
+{% block content %}
+		<h1 class='center'>Welcome to RASP PI controls</h1>
+		<form>
+			<a href='#' id=process_input_r><input type='button' name=red value=red></a>
+			<a href='#' id=process_input_b><input type='button' name=blue value=blue></a>
+			<a href='#' id=process_input_g><input type='button' name=green value=green></a>
+		</form>
+		<a href='#' id=process_input_clear><input type='button' name=clear value=clear></a>
+		<p id=result>...</p>
+		
+		<a href='about'><button class='center'id='navigate'>About --></button></a>
+{% endblock content %}

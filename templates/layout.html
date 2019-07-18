@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+		body{
+		  font-family: "Comic Sans MS",sans-serif,Arial, Helvetica;
+		  font-size: 15px;
+		  line-height: 1.5;
+		  padding:0;
+		  margin:0;
+		  background-color: #f4f4f4;
+		}
+		.center {
+		  display: block;
+		  text-align: center;
+		  margin-left: auto;
+		  margin-right: auto;
+		}
+		#navigate{
+		  background-color:#f4f4f4;
+		  border-style: outset;
+		  border-radius: 15px;
+		}
+		#navigate:hover{
+		  border-style: inset;
+		}
+		a{
+		   text-decoration: none;
+	    }
+	    
+	    headers{
+			float: right;
+		}
+		</style>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<meta charset ="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="author" content="Nick Kotte">
+		<title> Rasp Pi Local Host </title>
+		<link rel="shortcut icon" type="image/ico" href="favicon.ico">
+		{% block headerstuff %}
+		{% endblock headerstuff %}
+	</head>
+	<body>
+		<div id='headers'>
+			<a href='registration'>sign up</a>
+		</div>
+		{% block content %}
+		{% endblock content %}
+	</body>
+</html>

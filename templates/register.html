@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+		<h1 class='center'>Register:</h1>
+		<div class='center'>
+			<form mehtod='POST' action="">
+				{{ form.hidden_tag() }}
+				<fieldset>
+					<legend>Sign up</legend>
+					<div>
+						{{ form.username.label() }}
+						{{ form.username() }}
+						
+					</div>
+					<div>
+						{{ form.email.label() }}
+						{{ form.email() }}
+						
+					</div>
+					<div>
+						{{ form.password.label() }}
+						{{ form.password() }}
+						
+					</div>
+					<div>
+						{{ form.confirm_password.label() }}
+						{{ form.confirm_password() }}
+						
+					</div>
+				</fieldset>
+				<div>
+					{{ form.submit() }}
+				</div>
+			</form>
+		</div>
+		<div>
+			<small>
+				Already have an account? <a href='login'>Sign In</a>
+			</small>
+		</div>
+{% endblock content %}
