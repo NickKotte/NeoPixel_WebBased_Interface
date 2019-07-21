@@ -1,65 +1,113 @@
 {% extends "layout.html" %}
 
 {% block headerstuff %}
+
 <script type=text/javascript>
-		$(function() {
-		  $('a#process_input_r').bind('click', function() {
-			$.getJSON('/background_process', {
-			  color: $('input[name=red]').val(),
-			}, function(data) {
-			  $("#result").text(data.result);
-			});
-			return false;
-		  });
+		function submitColor(type){
+			if(type!='clear')
+				$('#result').html('displaying ' + type);
+			else
+				$('#result').html('cleaning LEDs');
+			$.post('/Solidfy_Process', { color: type });
+		};
+		function submitText(){
+			colors = [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value];
+			$('#result').html('displaying ' + colors);
+			$.post('/Detailed_Process', {'color[]' : [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value] });
+		};
+		
+		function hexToRgb(hex) {
+		  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		  return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		  } : null;
+		}
+		
+		$('#color_wheel').focusout(function() {
+			var rgb = hextToRgb(document.getElementById('color_wheel').value);
+			document.getElementById('red_value').value = rgb.r;
+			document.getElementById('green_value').value = rgb.g;
+			document.getElementById('blue_value').value = rgb.b;
 		});
+		
 </script>
-<script type=text/javascript>
-		$(function() {
-		  $('a#process_input_b').bind('click', function() {
-			$.getJSON('/background_process', {
-			  color: $('input[name=blue]').val(),
-			}, function(data) {
-			  $("#result").text(data.result);
-			});
-			return false;
-		  });
-		});
-</script>
-<script type=text/javascript>
-		$(function() {
-		  $('a#process_input_g').bind('click', function() {
-			$.getJSON('/background_process', {
-			  color: $('input[name=green]').val(),
-			}, function(data) {
-			  $("#result").text(data.result);
-			});
-			return false;
-		  });
-		});
-</script>
-<script type=text/javascript>
-		$(function() {
-		  $('a#process_input_clear').bind('click', function() {
-			$.getJSON('/background_process', {
-			  color: $('input[name=clear]').val(),
-			}, function(data) {
-			  $("#result").text(data.result);
-			});
-			return false;
-		  });
-		});
-</script>
+
+<style>
+	
+h1{
+	font-size:50px;
+}
+
+.box{
+	font-size: 40px;
+	font-weight: bold;
+	font-color: white;
+	font-variant: small-caps;
+	margin-top:35px;
+	margin-bottom:35px;
+	border-width:3px;
+	border-style:outset;
+	border-radius:10px;
+}
+
+
+#submit{
+	background-color: #00cc00;
+	margin-top: 10px;
+	font-size: 18px;
+	border-radius:10;
+}
+
+.info{
+	margin-top: 50px;
+	text-align:center;
+	font-size:18px;
+}
+
+.typer{
+	font-size: 30px;
+	border:none;
+	background-color: #fefcfb;
+}
+#color_chooser{
+	border-style:solid;
+	border-radius:20px;
+	padding:15px;
+	
+	margin-bottom:40px;
+	background-color: #690375;
+}
+
+colorwheel{
+	size: 15px;
+}
+
+</style>
 {% endblock headerstuff %}
 
 {% block content %}
-		<h1 class='center'>Welcome to RASP PI controls</h1>
-		<form>
-			<a href='#' id=process_input_r><input type='button' name=red value=red></a>
-			<a href='#' id=process_input_b><input type='button' name=blue value=blue></a>
-			<a href='#' id=process_input_g><input type='button' name=green value=green></a>
-		</form>
-		<a href='#' id=process_input_clear><input type='button' name=clear value=clear></a>
-		<p id=result>...</p>
-		
+		<h1 style='color:white' class='center'>RASP LED controls</h1>
+		<div id=color_chooser class='center'>
+			<button style="color:white;background-color:red;border-color:red" class=box id=redbox onclick=submitColor('red')>red</button>
+			<button style="color:white;background-color:limegreen;border-color:green" class=box id=greenbox onclick=submitColor('green')>green</button>
+			<button style="color:white;background-color:blue;border-color:blue" class=box id=bluebox onclick=submitColor('blue')>blue</button>
+		</div>
+		<hr>
+		<p class=info>Alternatively, submit a color in the RGB formation with values ranging from 0-255. <br>e.g. (0,255,158)</p>
+		<div class=center>
+			<input type=color  name=colorwheel id=color_wheel>
+			<input type=number name=red  class=typer id=red_value min=0 max=255 maxlength=3>,
+			<input type=number name=green  class=typer id=green_value min='0' max='255'>,
+			<input type=number name=blue  class=typer id=blue_value min='0' max='255'>
+			<br>
+			<button onclick=submitText() id=submit>submit</button>
+		</div>
+		<br>
+		<div class=center>
+			<button class=box onclick=submitColor('clear') style="background-color:color:#fefcfb">clear</button>
+			<p id=result>...</p>
+		</div>
 		<a href='about'><button class='center'id='navigate'>About --></button></a>
 {% endblock content %}

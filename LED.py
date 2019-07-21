@@ -20,7 +20,20 @@ class led:
 		self.strip.begin()
 
 	def showSolidColor(self, color, ms):
-		for i in range(self.LED_COUNT):
+		for i in range(self.LED_COUNT/2):
 			self.strip.setPixelColor(i, color)
 			self.strip.show()
 			time.sleep(ms/1000.0)
+
+	def splitSolidColor(self, color, ms):
+		i=0
+		half=self.LED_COUNT/2
+		self.strip.setPixelColor(half,color)
+		self.strip.show()
+		time.sleep(ms/1000.0)
+		while i < half:
+			self.strip.setPixelColor(half+i,color)
+			self.strip.setPixelColor(half-i,color)
+			self.strip.show()
+			time.sleep(ms/1000.0)
+			i=i+1
