@@ -12,6 +12,12 @@ def hello_world():
     return render_template('home.html')
 
 strip = led()
+@app.route('/_pattern', methods=['POST'])
+def _pattern():
+	pattern = request.form['pattern']
+	strip.testpattern(100)
+	return 'good'
+
 @app.route('/Solidfy_Process', methods=['POST'])
 def Solidfy_Process():
 	

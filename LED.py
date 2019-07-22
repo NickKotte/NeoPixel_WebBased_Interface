@@ -37,3 +37,24 @@ class led:
 			self.strip.show()
 			time.sleep(ms/1000.0)
 			i=i+1
+
+	def testpattern(self, numTimes):
+		pattern = []
+		pattern.append(Color(0,0,0))
+		pattern.append(Color(255,0,0))
+		pattern.append(Color(0,0,0))
+		pattern.append(Color(250,255,0))
+		pattern.append(Color(0,0,0))
+		pattern.append(Color(0,255,0))
+		pattern.append(Color(0,0,0))
+		pattern.append(Color(0,0,255))
+		num = 0
+		while num < numTimes:
+			for i in range(self.LED_COUNT):
+				self.strip.setPixelColor(i,pattern[i%8])
+			self.strip.show();
+			time.sleep(.05)
+			pattern.append(pattern.pop(0))
+			num = num+1
+		self.splitSolidColor(Color(0,0,0),1)
+					

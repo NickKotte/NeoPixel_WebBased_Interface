@@ -3,34 +3,69 @@
 {% block headerstuff %}
 
 <script type=text/javascript>
+	
+		function testpattern(){
+			$.post('/_pattern', {pattern : 0});
+		
+		};
+		
+	
 		function submitColor(type){
-			if(type!='clear')
-				$('#result').html('displaying ' + type);
-			else
-				$('#result').html('cleaning LEDs');
+			
+			$('#result').slideToggle().delay(100).queue(function(n) {
+					if(type!='clear'){
+						if(type=='')
+							$(this).html('You are missing one or more values. Satisfy each requirement before submitting.');
+						else
+							$(this).html('Displaying ' + type);
+					}
+					else{
+						$(this).html('Cleaning LEDs');
+				}
+				n();
+			}).slideToggle();
 			$.post('/Solidfy_Process', { color: type });
 		};
-		function submitText(){
-			colors = [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value];
-			$('#result').html('displaying ' + colors);
-			$.post('/Detailed_Process', {'color[]' : [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value] });
-		};
-		
-		function hexToRgb(hex) {
-		  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-		  return result ? {
-			r: parseInt(result[1], 16),
-			g: parseInt(result[2], 16),
-			b: parseInt(result[3], 16)
-		  } : null;
+
+		function rgbToHex(r, g, b) {
+		  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 		}
 		
-		$('#color_wheel').focusout(function() {
-			var rgb = hextToRgb(document.getElementById('color_wheel').value);
-			document.getElementById('red_value').value = rgb.r;
-			document.getElementById('green_value').value = rgb.g;
-			document.getElementById('blue_value').value = rgb.b;
-		});
+		function submitText(){
+			colors = [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value];
+			if(colors[0] == '' || colors[1] == '' || colors[2] == '')
+				submitColor('');
+			else
+			{
+				document.getElementById('color_wheel').value = rgbToHex(parseInt(colors[1]),parseInt(colors[0]),parseInt(colors[2]));
+				$('#result').html('displaying ' + colors);
+				$.post('/Detailed_Process', {'color[]' : [document.getElementById('green_value').value,document.getElementById('red_value').value,document.getElementById('blue_value').value] });
+			}
+		};
+		
+		$(document).ready(function(){
+			
+			document.getElementById('color_wheel').addEventListener('change', updateText, false);
+			
+			function updateText(event){
+				var rgb=hexToRgb(document.getElementById('color_wheel').value)
+				document.getElementById('red_value').value = rgb.r;
+				document.getElementById('green_value').value = rgb.g;
+				document.getElementById('blue_value').value = rgb.b;
+			}
+			
+			
+			function hexToRgb(hex) {
+			  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			  return result ? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			  } : null;
+			}
+			
+			
+	});
 		
 </script>
 
@@ -45,8 +80,8 @@ h1{
 	font-weight: bold;
 	font-color: white;
 	font-variant: small-caps;
-	margin-top:35px;
-	margin-bottom:35px;
+	margin-top:10px;
+	margin-bottom:10px;
 	border-width:3px;
 	border-style:outset;
 	border-radius:10px;
@@ -54,10 +89,16 @@ h1{
 
 
 #submit{
+	font-size:15px;
 	background-color: #00cc00;
 	margin-top: 10px;
-	font-size: 18px;
 	border-radius:10;
+}
+
+#result{
+	text-align:center;
+	font-size:20px;
+	font-weight: bold;
 }
 
 .info{
@@ -75,7 +116,7 @@ h1{
 	border-style:solid;
 	border-radius:20px;
 	padding:15px;
-	
+	width:70%;
 	margin-bottom:40px;
 	background-color: #690375;
 }
@@ -84,30 +125,72 @@ colorwheel{
 	size: 15px;
 }
 
+.dropdown{
+	position:relative;
+	display:inline-block;
+}
+
+.dropbutton{
+	font-size:15px;
+	border: none;
+	padding: 15px;
+}
+
+.dropdown_content{
+	display: none;
+	position:absolute;
+	background-color: #f1f1f1;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+}
+
+.dropdown_content a{
+	display:block;
+	color:black;
+	text-decoration: none;
+}
+
+.dropdown_content a:hover {background-color: grey}
+.dropdown:hover .dropdown_content {display: block}
+.dropdown:hover .dropbutton {background-color: grey}
+
+
+
 </style>
 {% endblock headerstuff %}
 
 {% block content %}
 		<h1 style='color:white' class='center'>RASP LED controls</h1>
+		<p class=info>Start off by sending a simple instruction to the LEDs:</p>
 		<div id=color_chooser class='center'>
 			<button style="color:white;background-color:red;border-color:red" class=box id=redbox onclick=submitColor('red')>red</button>
 			<button style="color:white;background-color:limegreen;border-color:green" class=box id=greenbox onclick=submitColor('green')>green</button>
 			<button style="color:white;background-color:blue;border-color:blue" class=box id=bluebox onclick=submitColor('blue')>blue</button>
+			<div class=dropdown>
+				<button style="color:white;background-color:black;" class=dropbutton>more</button>
+				<div class=dropdown_content>
+					<a onclick=pattern('christmas')>christmas</a>
+				</div>
+			</div>
 		</div>
 		<hr>
+		<p id=result>...</p>
+		<hr>
 		<p class=info>Alternatively, submit a color in the RGB formation with values ranging from 0-255. <br>e.g. (0,255,158)</p>
-		<div class=center>
-			<input type=color  name=colorwheel id=color_wheel>
+		<div class=center >
+			
+			<input type=color id=color_wheel value=#ff99ff>
 			<input type=number name=red  class=typer id=red_value min=0 max=255 maxlength=3>,
 			<input type=number name=green  class=typer id=green_value min='0' max='255'>,
 			<input type=number name=blue  class=typer id=blue_value min='0' max='255'>
 			<br>
-			<button onclick=submitText() id=submit>submit</button>
+			<button id=submit class=box onclick=submitText()>submit</button>
 		</div>
-		<br>
+		<hr>
 		<div class=center>
-			<button class=box onclick=submitColor('clear') style="background-color:color:#fefcfb">clear</button>
-			<p id=result>...</p>
+			<button class=box id=clear onclick=submitColor('clear') style="background-color:color:#fefcfb">clean</button>
 		</div>
 		<a href='about'><button class='center'id='navigate'>About --></button></a>
+	
 {% endblock content %}

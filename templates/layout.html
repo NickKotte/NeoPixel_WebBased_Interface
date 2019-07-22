@@ -51,20 +51,24 @@
 		    margin-bottom;10px;
 		    font-size:30px;
 		  }
+		  #submit{
+		    width:40%;
+		    height:40px;
+		  }
 		  
 		  #color_chooser{
 		    width:75%;
 		    }
 		}
 		</style>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<meta charset ="UTF-8">
 		<meta name="viewport" content="width=device-width">
 		<meta name="author" content="Nick Kotte">
-		<link href='color-picker.min.css' rel=stylesheet>
-		<script src='color-picker.min.js'></script>
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-		<title> Rasp Pi Local Host </title>
+		<link src="{{url_for('static', filename='spectrum.css')}}" rel="stylesheet">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="{{url_for('static', filename='spectrum.js')}}"></script>
+		<title> LED Controls </title>
 		{% block headerstuff %}
 		{% endblock headerstuff %}
 	</head>
