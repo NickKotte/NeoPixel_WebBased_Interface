@@ -4,12 +4,14 @@
 
 <script type=text/javascript>
 	
-		function testpattern(){
-			$.post('/_pattern', {pattern : 0});
-		
+		function pattern(type){
+			var cps = document.getElementById('cps').value;
+			if (cps == "")
+				document.getElementById('cps').value = 1.0;
+			
+			$.post('/pattern', {pattern : type, cyclesPerSecond : document.getElementById('cps').value});
 		};
 		
-	
 		function submitColor(type){
 			
 			$('#result').slideToggle().delay(100).queue(function(n) {
@@ -55,6 +57,7 @@
 			}
 			
 			
+			
 			function hexToRgb(hex) {
 			  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 			  return result ? {
@@ -76,15 +79,17 @@ h1{
 }
 
 .box{
-	font-size: 40px;
-	font-weight: bold;
-	font-color: white;
-	font-variant: small-caps;
+	text-align: center;
+	float: none;
+	width:75%;
+	max-width: 200px;
+	height: 76px;
+	padding:10px;
 	margin-top:10px;
-	margin-bottom:10px;
-	border-width:3px;
-	border-style:outset;
-	border-radius:10px;
+	margin-bottom;10px;
+	font-size:30px;
+	font-variant:small-caps;
+	border-radius:10px
 }
 
 
@@ -113,12 +118,13 @@ h1{
 	background-color: #fefcfb;
 }
 #color_chooser{
-	border-style:solid;
+	border-style:none;
 	border-radius:20px;
-	padding:15px;
+	padding:20px;
 	width:70%;
+	max-width: 500px;
 	margin-bottom:40px;
-	background-color: #690375;
+	background-color: #461d66;
 }
 
 colorwheel{
@@ -128,21 +134,28 @@ colorwheel{
 .dropdown{
 	position:relative;
 	display:inline-block;
+	font-variant: small-caps;
 }
 
 .dropbutton{
 	font-size:15px;
+	background-color: #f1f1f1;
 	border: none;
-	padding: 15px;
+	padding: 10px;
+	min-width:50px;
+	margin-top: 10px;
+	font-variant: small-caps;
 }
 
 .dropdown_content{
 	display: none;
 	position:absolute;
+	color:black;
 	background-color: #f1f1f1;
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
+	padding:12px;
 }
 
 .dropdown_content a{
@@ -151,8 +164,8 @@ colorwheel{
 	text-decoration: none;
 }
 
-.dropdown_content a:hover {background-color: grey}
-.dropdown:hover .dropdown_content {display: block}
+.dropdown_content:hover {background-color: grey}
+.dropdown:hover	.dropdown_content {display: block}
 .dropdown:hover .dropbutton {background-color: grey}
 
 
@@ -164,14 +177,13 @@ colorwheel{
 		<h1 style='color:white' class='center'>RASP LED controls</h1>
 		<p class=info>Start off by sending a simple instruction to the LEDs:</p>
 		<div id=color_chooser class='center'>
-			<button style="color:white;background-color:red;border-color:red" class=box id=redbox onclick=submitColor('red')>red</button>
-			<button style="color:white;background-color:limegreen;border-color:green" class=box id=greenbox onclick=submitColor('green')>green</button>
-			<button style="color:white;background-color:blue;border-color:blue" class=box id=bluebox onclick=submitColor('blue')>blue</button>
+			<button style="color:white;background-color:red;" class=box id=redbox onclick=submitColor('red')>red</button>
+			<button style="color:white;background-color:limegreen;" class=box id=greenbox onclick=submitColor('green')>green</button>
+			<button style="color:white;background-color:blue;" class=box id=bluebox onclick=submitColor('blue')>blue</button>
+			<br>
 			<div class=dropdown>
-				<button style="color:white;background-color:black;" class=dropbutton>more</button>
-				<div class=dropdown_content>
-					<a onclick=pattern('christmas')>christmas</a>
-				</div>
+				<button class=dropbutton>more</button>
+				<span class=dropdown_content>christmas</a><input type=number id=cps placeholder='#cps'><button onclick=pattern('christmas')>send</button></span>
 			</div>
 		</div>
 		<hr>
@@ -181,9 +193,9 @@ colorwheel{
 		<div class=center >
 			
 			<input type=color id=color_wheel value=#ff99ff>
-			<input type=number name=red  class=typer id=red_value min=0 max=255 maxlength=3>,
-			<input type=number name=green  class=typer id=green_value min='0' max='255'>,
-			<input type=number name=blue  class=typer id=blue_value min='0' max='255'>
+			<input type=number name=red  class=typer placeholder='R' id=red_value min=0 max=255 maxlength=3>,
+			<input type=number name=green  class=typer placeholder='G' id=green_value min='0' max='255'>,
+			<input type=number name=blue  class=typer placeholder='B' id=blue_value min='0' max='255'>
 			<br>
 			<button id=submit class=box onclick=submitText()>submit</button>
 		</div>
@@ -191,6 +203,12 @@ colorwheel{
 		<div class=center>
 			<button class=box id=clear onclick=submitColor('clear') style="background-color:color:#fefcfb">clean</button>
 		</div>
+		<br>
 		<a href='about'><button class='center'id='navigate'>About --></button></a>
 	
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 {% endblock content %}

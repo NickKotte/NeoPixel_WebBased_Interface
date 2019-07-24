@@ -15,6 +15,7 @@ class led:
 		self.LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
 		self.LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 		self.LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
+		self.go = True
 		
 		self.strip = Adafruit_NeoPixel(self.LED_COUNT, self.LED_PIN, self.LED_FREQ_HZ, self.LED_DMA, self.LED_INVERT, self.LED_BRIGHTNESS, self.LED_CHANNEL)
 		self.strip.begin()
@@ -38,23 +39,34 @@ class led:
 			time.sleep(ms/1000.0)
 			i=i+1
 
-	def testpattern(self, numTimes):
-		pattern = []
-		pattern.append(Color(0,0,0))
-		pattern.append(Color(255,0,0))
-		pattern.append(Color(0,0,0))
-		pattern.append(Color(250,255,0))
-		pattern.append(Color(0,0,0))
-		pattern.append(Color(0,255,0))
-		pattern.append(Color(0,0,0))
-		pattern.append(Color(0,0,255))
-		num = 0
-		while num < numTimes:
-			for i in range(self.LED_COUNT):
-				self.strip.setPixelColor(i,pattern[i%8])
-			self.strip.show();
-			time.sleep(.05)
-			pattern.append(pattern.pop(0))
-			num = num+1
-		self.splitSolidColor(Color(0,0,0),1)
-					
+	def testpattern(self, _type, cps):
+		self.setGo(True)
+		
+		if _type == 'christmas':
+			pattern = []
+			pattern.append(Color(0,0,0))
+			pattern.append(Color(255,0,0))
+			pattern.append(Color(0,0,0))
+			pattern.append(Color(250,255,0))
+			pattern.append(Color(0,0,0))
+			pattern.append(Color(0,255,0))
+			pattern.append(Color(0,0,0))
+			pattern.append(Color(0,0,255))
+			while True:
+				for i in range(self.LED_COUNT):
+					if self.getGo() == False:
+						return 'set'
+					self.strip.setPixelColor(i,pattern[i%8])
+				self.strip.show()
+				time.sleep(cps)
+				pattern.append(pattern.pop(0))
+		
+		
+	#mutators
+	def setGo(self, boolean):
+		self.go = boolean
+		return self.go
+	
+	#accessors
+	def getGo(self):
+		return self.go
