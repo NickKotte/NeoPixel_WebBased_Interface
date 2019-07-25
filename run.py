@@ -17,9 +17,6 @@ strip = led()
 def pattern():
 	pattern = request.form['pattern']
 	cyclesPerSecond = float(request.form['cyclesPerSecond'])
-	
-	#cap = 5s
-
 	if cyclesPerSecond < 0:
 		cyclesPerSecond = 0
 	elif cyclesPerSecond > 5:

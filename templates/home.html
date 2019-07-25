@@ -162,9 +162,10 @@ colorwheel{
 	display:block;
 	color:black;
 	text-decoration: none;
+	padding: 12px 16px;
 }
 
-.dropdown_content:hover {background-color: grey}
+.dropdown_content a:hover {background-color: grey}
 .dropdown:hover	.dropdown_content {display: block}
 .dropdown:hover .dropbutton {background-color: grey}
 
@@ -183,7 +184,11 @@ colorwheel{
 			<br>
 			<div class=dropdown>
 				<button class=dropbutton>more</button>
-				<span class=dropdown_content>christmas</a><input type=number id=cps placeholder='#cps'><button onclick=pattern('christmas')>send</button></span>
+				<div class=dropdown_content>
+					<span>christmas</a><input type=number id=cps placeholder='#cps'><button onclick=pattern('christmas')>send</button></span>
+					<hr>
+					<span>Showcase</a><button onclick=pattern('showcase')>run</span>
+				</div>
 			</div>
 		</div>
 		<hr>

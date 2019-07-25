@@ -12,7 +12,7 @@ class led:
 		#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 		self.LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 		self.LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
-		self.LED_BRIGHTNESS = 100     # Set to 0 for darkest and 255 for brightest
+		self.LED_BRIGHTNESS = 160     # Set to 0 for darkest and 255 for brightest
 		self.LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 		self.LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 		self.go = True
@@ -61,6 +61,47 @@ class led:
 				time.sleep(cps)
 				pattern.append(pattern.pop(0))
 		
+		if _type == 'showcase':
+			pattern = [[0,72,200], [72,200,0]]
+			self.fade(pattern, 10)
+			return 'good'
+			
+	def fade(self, pattern, ms):
+		self.splitSolidColor(Color(72,200,0), 5)
+		
+		while True:
+			print(pattern)
+			pattern.append(pattern.pop(0))
+			current = pattern[0][:]
+			second = pattern[1][:]
+			print('switching')
+			print(pattern)
+			
+			while current != second:
+				if self.getGo() == False:
+					return 'set'
+					
+				if current[0] < second[0]:
+					current[0] = current[0]+1
+				if current[0] > second[0]:
+					current[0] = current[0]-1
+					
+				if current[1] < second[1]:
+					current[1] = current[1]+1
+				if current[1] > second[1]:
+					current[1] = current[1]-1
+					
+				if current[2] < second[2]:
+					current[2] = current[2]+1
+				if current[2] > second[2]:
+					current[2] = current[2]-1
+				
+				for i in range(self.LED_COUNT):
+					if self.getGo() == False:
+						return 'set'
+					self.strip.setPixelColor(i, Color(current[0],current[1],current[2]))
+				self.strip.show()
+			
 		
 	#mutators
 	def setGo(self, boolean):
